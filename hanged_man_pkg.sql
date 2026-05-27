@@ -81,7 +81,7 @@ BEGIN
         RETURN;    
 	END IF;
 	
-	INSERT INTO rankings (USERNAME, word_ID, word, category, days, attempts, duration, results, mistakes)
+	INSERT INTO rankings (USERNAME, word_ID, progress, category, days, attempts, duration, results, mistakes)
 	VALUES (user, p_rec.word_id, p_rec.masked_word, p_rec.category, sysdate, p_rec.attempts_count, calculate_elapsed_time(p_rec.start_time), v_result ,p_rec.mistakes_count);
 	--  cleaning
 	DELETE FROM game_sessions WHERE username = USER;
@@ -99,7 +99,7 @@ PROCEDURE guess_letter(p_letter VARCHAR2) IS
 			FROM game_sessions
 			WHERE username = USER;
             
-            IF EXTRACT(MINUTE FROM calculate_elapsed_time(v_game.start_time)) >=  INTERVAL '15' MINUTE THEN
+            IF calculate_elapsed_time(v_game.start_time) >=  INTERVAL '15' MINUTE THEN
                 end_game(v_game,2);
                 RETURN;
 			END IF;
@@ -197,7 +197,7 @@ PROCEDURE guess_word(p_word VARCHAR2) IS
 		FROM game_sessions
 		WHERE username = USER;
         
-        IF EXTRACT(MINUTE FROM calculate_elapsed_time(v_game.start_time)) >= INTERVAL '15' MINUTE THEN
+        IF EXTRACT(MINUTE FROM calculate_elapsed_time(v_game.start_time)) >= 15 THEN
             end_game(v_game,2);
             RETURN;
         END IF;
